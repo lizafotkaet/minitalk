@@ -1,49 +1,52 @@
+## Commands ##
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -I./inc -g
+CFLAGS = -Wall -Wextra -Werror -I./inc -I./ -g ##-fsanitize=address
+LDFLAGS = -L./libft -lft
 RM = rm -f
+MKDIR = mkdir -p
 
-SRCS_SERVER = server.c \
+## Files ##
+SERVER_SRCS = src/server.c
+CLIENT_SRCS = src/client.c
 
-SRCS_CLIENT = client.c \
+# Derive object files separately
+SERVER_OBJS = $(SERVER_SRCS:src/%.c=obj/%.o)
+CLIENT_OBJS = $(CLIENT_SRCS:src/%.c=obj/%.o)
 
-# Added OBJDIR variable for object files directory
-OBJDIR = obj
-# Updated OBJS variable to include the directory
-OBJS_SERVER = $(addprefix $(OBJDIR)/, $(SRCS_SERVER:.c=.o))
-OBJS_CLIENT = $(addprefix $(OBJDIR)/, $(SRCS_CLIENT:.c=.o))
+OBJS = $(SERVER_OBJS) $(CLIENT_OBJS)
+DEPS = $(OBJS:.o=.d)
 
-NAME_SERVER = server
-NAME_CLIENT = client
 
-## Compilation server ##
-$(NAME_SERVER): $(OBJS_SERVER) libft/libft.a
-	$(CC) $(CFLAGS) -o $@ $(OBJS_SERVER) -Llibft -lft
+all: server client
 
-## Compilation client ##
+server: obj $(OBJS) libft/libft.a
+	$(CC) $(CFLAGS) -o $@ $(SERVER_OBJS) $(LDFLAGS)
 
-$(NAME_CLIENT): $(OBJS_CLIENT) libft/libft.a
-	$(CC) $(CFLAGS) -o $@ $(OBJS_CLIENT) -Llibft -lft
+client: obj $(OBJS) libft/libft.a
+	$(CC) $(CFLAGS) -o $@ $(CLIENT_OBJS) $(LDFLAGS)
 
-# Updated compilation rule to place .o files in the OBJDIR
-$(OBJDIR)/%.o: %.c
-	@mkdir -p $(OBJDIR)
+
+obj:
+	@$(MKDIR) obj
+
+obj/%.o: src/%.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-## Cleaning ##
+-include $(DEPS)
+
 clean:
-	$(RM) $(OBJS_CLIENT)
-	$(RM) $(OBJS_SERVER)
-	$(RM) -r $(OBJDIR) # Remove the object files directory
+	$(RM) -r obj
 	$(MAKE) -C libft clean
 
 fclean: clean
-	$(RM) $(NAME_CLIENT)
-	$(RM) $(NAME_SERVER)
+	$(RM) server client 
 	$(MAKE) -C libft fclean
 
-re: fclean $(NAME)
+re: fclean all
 
-## Ensure libft is built ##
+libft: libft/libft.a
+
 libft/libft.a:
 	$(MAKE) -C libft all
 
+.PHONY: all clean fclean re server client libft
