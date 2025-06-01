@@ -3,3 +3,5 @@
 *.exe
 *.d
 *.a
+client
+server
