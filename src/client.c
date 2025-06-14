@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   client.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebarbash <ebarbash@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sergei_pilman <sergei_pilman@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 11:31:24 by ebarbash          #+#    #+#             */
-/*   Updated: 2025/06/01 18:14:27 by ebarbash         ###   ########.fr       */
+/*   Updated: 2025/06/09 20:56:30 by sergei_pilm      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ volatile sig_atomic_t	g_sigstatus = READY;
 static void	end_handler(int sig)
 {
 	if (sig == SIGUSR1)
-		g_sigstatus = READY;
+		g_sigstatus = BUSY;
 	else
 	{
 		write (1, "Message received\n", 17);
@@ -37,9 +37,9 @@ void	send_char(pid_t pid, char str)
 		else
 			kill(pid, SIGUSR1);
 		i--;
-		while (g_sigstatus == BUSY)
+		while (g_sigstatus == READY)
 			pause();
-		g_sigstatus = BUSY;
+		g_sigstatus = READY;
 	}
 }
 

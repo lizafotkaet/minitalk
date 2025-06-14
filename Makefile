@@ -16,6 +16,8 @@ CLIENT_OBJS = $(CLIENT_SRCS:src/%.c=obj/%.o)
 OBJS = $(SERVER_OBJS) $(CLIENT_OBJS)
 DEPS = $(OBJS:.o=.d)
 
+## Targets ##
+.PHONY: all clean fclean re server client libft
 
 all: server client
 
@@ -49,4 +51,6 @@ libft: libft/libft.a
 libft/libft.a:
 	$(MAKE) -C libft all
 
-.PHONY: all clean fclean re server client libft
+
+
+
