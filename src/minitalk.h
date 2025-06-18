@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minitalk.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebarbash <ebarbash@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sergei_pilman <sergei_pilman@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 10:54:55 by sergei_pilm       #+#    #+#             */
-/*   Updated: 2025/06/01 16:21:18 by ebarbash         ###   ########.fr       */
+/*   Updated: 2025/06/18 05:03:24 by sergei_pilm      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define MINITALK_H
 # define _XOPEN_SOURCE 700
 
-# include "libft/libft.h"
+# include "../libft/libft.h"
 # include <stdbool.h>
 # include <stdint.h>
 # include <stdio.h>

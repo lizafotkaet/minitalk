@@ -1,56 +1,43 @@
-## Commands ##
+# Makefile
+
+NAME_SERVER = server
+NAME_CLIENT = client
+
+SRC_DIR = src
+OBJ_DIR = obj
+LIBFT_DIR = libft
+LIBFT_A = $(LIBFT_DIR)/libft.a
+
+SRCS = $(SRC_DIR)/client.c $(SRC_DIR)/server.c
+OBJS = $(addprefix $(OBJ_DIR)/, $(notdir $(SRCS:.c=.o)))
+
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -I./inc -I./ -g ##-fsanitize=address
-LDFLAGS = -L./libft -lft
-RM = rm -f
-MKDIR = mkdir -p
+CFLAGS = -Wall -Wextra -Werror
+INCLUDES = -I$(SRC_DIR) -I$(LIBFT_DIR)
 
-## Files ##
-SERVER_SRCS = src/server.c
-CLIENT_SRCS = src/client.c
+all: $(NAME_CLIENT) $(NAME_SERVER)
 
-# Derive object files separately
-SERVER_OBJS = $(SERVER_SRCS:src/%.c=obj/%.o)
-CLIENT_OBJS = $(CLIENT_SRCS:src/%.c=obj/%.o)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(OBJ_DIR)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-OBJS = $(SERVER_OBJS) $(CLIENT_OBJS)
-DEPS = $(OBJS:.o=.d)
+$(LIBFT_A):
+	$(MAKE) -C $(LIBFT_DIR)
 
-## Targets ##
-.PHONY: all clean fclean re server client libft
+$(NAME_CLIENT): $(OBJ_DIR)/client.o $(LIBFT_A)
+	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $^ $(LIBFT_A)
 
-all: server client
-
-server: obj $(OBJS) libft/libft.a
-	$(CC) $(CFLAGS) -o $@ $(SERVER_OBJS) $(LDFLAGS)
-
-client: obj $(OBJS) libft/libft.a
-	$(CC) $(CFLAGS) -o $@ $(CLIENT_OBJS) $(LDFLAGS)
-
-
-obj:
-	@$(MKDIR) obj
-
-obj/%.o: src/%.c
-	$(CC) $(CFLAGS) -c -o $@ $<
-
--include $(DEPS)
+$(NAME_SERVER): $(OBJ_DIR)/server.o $(LIBFT_A)
+	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $^ $(LIBFT_A)
 
 clean:
-	$(RM) -r obj
-	$(MAKE) -C libft clean
+	rm -rf $(OBJ_DIR)
+	$(MAKE) -C $(LIBFT_DIR) clean
 
 fclean: clean
-	$(RM) server client 
-	$(MAKE) -C libft fclean
+	rm -f $(NAME_CLIENT) $(NAME_SERVER)
+	$(MAKE) -C $(LIBFT_DIR) fclean
 
 re: fclean all
 
-libft: libft/libft.a
-
-libft/libft.a:
-	$(MAKE) -C libft all
-
-
-
-
+.PHONY: clean fclean re
