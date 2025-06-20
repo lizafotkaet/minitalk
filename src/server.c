@@ -6,7 +6,7 @@
 /*   By: ebarbash <ebarbash@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 11:31:16 by ebarbash          #+#    #+#             */
-/*   Updated: 2025/06/01 18:03:36 by ebarbash         ###   ########.fr       */
+/*   Updated: 2025/06/20 11:33:31 by ebarbash         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,9 @@ static void	sig_handler(int sign, siginfo_t *info, void *context)
 
 int	main(void)
 {
-	struct sigaction	server_sa = {0};
+	struct sigaction	server_sa;
 
+	server_sa = {0};
 	ft_printf("Server PID: %d\n", getpid());
 	server_sa.sa_sigaction = sig_handler;
 	server_sa.sa_flags = SA_SIGINFO;

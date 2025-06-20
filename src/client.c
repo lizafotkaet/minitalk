@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   client.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sergei_pilman <sergei_pilman@student.42    +#+  +:+       +#+        */
+/*   By: ebarbash <ebarbash@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 11:31:24 by ebarbash          #+#    #+#             */
-/*   Updated: 2025/06/18 05:28:58 by sergei_pilm      ###   ########.fr       */
+/*   Updated: 2025/06/20 11:32:22 by ebarbash         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	send_char(pid_t pid, char str)
 			kill(pid, SIGUSR1);
 		i--;
 		while (g_sigstatus == READY)
-			pause();
+			usleep(10);
 		g_sigstatus = READY;
 	}
 }
@@ -55,8 +55,8 @@ void	send_msg(pid_t pid, char *str)
 
 int	main(int argc, char **argv)
 {
-	pid_t	server_pid;
-	char	*str;
+	pid_t				server_pid;
+	char				*str;
 	struct sigaction	client_sa;
 
 	if (argc != 3)
