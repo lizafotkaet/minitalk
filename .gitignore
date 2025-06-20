@@ -1,8 +1,0 @@
-*.o
-*.out
-*.exe
-*.d
-*.a
-client
-server
-minitalk-Tester/
