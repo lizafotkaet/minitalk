@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   client.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebarbash <ebarbash@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sergei_pilman <sergei_pilman@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 11:31:24 by ebarbash          #+#    #+#             */
-/*   Updated: 2025/06/20 11:32:22 by ebarbash         ###   ########.fr       */
+/*   Updated: 2025/07/04 21:18:42 by sergei_pilm      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,9 @@ void	send_char(pid_t pid, char str)
 			kill(pid, SIGUSR1);
 		i--;
 		while (g_sigstatus == READY)
+		{
 			usleep(10);
+		}
 		g_sigstatus = READY;
 	}
 }
@@ -53,15 +55,22 @@ void	send_msg(pid_t pid, char *str)
 	send_char(pid, '\0');
 }
 
+void	error_check(int argc, char **argv, int *error)
+{
+	if (argc != 3 || ft_atoi(argv[1], error) <= 1 || *error == 1)
+		(write(2, "Error. Invalid PID or wrong num of args\n", 40), exit(EXIT_FAILURE));
+}
+
 int	main(int argc, char **argv)
 {
 	pid_t				server_pid;
 	char				*str;
 	struct sigaction	client_sa;
+	int					error;
 
-	if (argc != 3)
-		(write(2, "Error\n", 7), exit(EXIT_FAILURE));
-	server_pid = ft_atoi(argv[1], 0);
+	error_check(argc, argv, &error);
+	error = 0;
+	server_pid = ft_atoi(argv[1], &error);
 	str = argv[2];
 	client_sa.sa_flags = SA_SIGINFO;
 	client_sa.sa_handler = end_handler;
